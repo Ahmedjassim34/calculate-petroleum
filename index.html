@@ -9,7 +9,7 @@
         /* التصميم العام */
         body {
             font-family: 'Poppins', sans-serif;
-            background: linear-gradient(135deg, #1a1a1a, #333333); /* خلفية داكنة */
+            background: linear-gradient(135deg, #0a0a0a, #1a1a1a); /* خلفية داكنة */
             color: #fff;
             display: flex;
             justify-content: center;
@@ -39,7 +39,7 @@
         h1 {
             font-size: 28px;
             margin-bottom: 20px;
-            color: #FFD700; /* لون ذهبي */
+            color: #ffffff; /* لون أبيض */
             font-weight: 600;
             animation: slideIn 0.5s ease-in-out;
         }
@@ -70,10 +70,10 @@
             width: 100%;
             padding: 12px;
             margin-top: 20px;
-            background: #FFD700; /* لون ذهبي */
+            background: #000000; /* لون أسود */
             border: none;
             border-radius: 10px;
-            color: #1a1a1a; /* لون داكن */
+            color: #fff; /* لون أبيض */
             font-size: 16px;
             cursor: pointer;
             transition: background 0.3s ease, transform 0.3s ease;
@@ -81,12 +81,12 @@
         }
 
         button:hover {
-            background: #FFC300; /* لون ذهبي داكن */
+            background: #333333; /* لون رمادي داكن */
             transform: translateY(-2px);
         }
 
         button:disabled {
-            background: #ccc;
+            background: #555555; /* لون رمادي */
             cursor: not-allowed;
         }
 
@@ -205,7 +205,7 @@
             position: absolute;
             width: 20px;
             height: 20px;
-            background: #FFD700; /* لون ذهبي */
+            background: #000000; /* لون أسود */
             border-radius: 50%;
             animation: float 5s infinite ease-in-out;
             z-index: 1;
@@ -275,6 +275,9 @@
             const endTime = localStorage.getItem('lockEndTime');
             if (endTime && Date.now() < endTime) {
                 const remainingTime = Math.ceil((endTime - Date.now()) / 1000);
+                isLocked = true;
+                document.getElementById('loginButton').disabled = true;
+                document.getElementById('timerMessage').style.display = 'block';
                 startCountdown(remainingTime);
             }
         };
