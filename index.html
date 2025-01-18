@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html lang="ar">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -8,11 +7,9 @@
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
     <style>
         /* التصميم العام */
-        
         body {
             font-family: 'Poppins', sans-serif;
-            background: linear-gradient(135deg, #1e3c72, #2a5298);
-            /* خلفية زرقاء داكنة */
+            background: linear-gradient(135deg, #1e3c72, #2a5298); /* خلفية زرقاء داكنة */
             color: #fff;
             display: flex;
             justify-content: center;
@@ -23,7 +20,7 @@
             overflow: hidden;
             position: relative;
         }
-        
+
         .container {
             background: rgba(255, 255, 255, 0.1);
             padding: 30px;
@@ -38,27 +35,25 @@
             position: relative;
             z-index: 2;
         }
-        
+
         .logo {
             text-align: center;
             margin-bottom: 20px;
         }
-        
+
         .logo img {
-            max-width: 100px;
-            /* تصغير حجم الصورة */
+            max-width: 100px; /* تصغير حجم الصورة */
             height: auto;
         }
-        
+
         h1 {
             font-size: 28px;
             margin-bottom: 20px;
-            color: #FFEB3B;
-            /* لون أصفر */
+            color: #FFEB3B; /* لون أصفر */
             font-weight: 600;
             animation: slideIn 0.5s ease-in-out;
         }
-        
+
         input {
             width: 100%;
             padding: 12px;
@@ -71,50 +66,47 @@
             outline: none;
             transition: background 0.3s ease, transform 0.3s ease;
         }
-        
+
         input::placeholder {
             color: rgba(255, 255, 255, 0.7);
         }
-        
+
         input:focus {
             background: rgba(255, 255, 255, 0.3);
             transform: scale(1.02);
         }
-        
+
         button {
             width: 100%;
             padding: 12px;
             margin-top: 20px;
-            background: #FFEB3B;
-            /* لون أصفر */
+            background: #FFEB3B; /* لون أصفر */
             border: none;
             border-radius: 10px;
-            color: #1e3c72;
-            /* لون أزرق داكن */
+            color: #1e3c72; /* لون أزرق داكن */
             font-size: 16px;
             cursor: pointer;
             transition: background 0.3s ease, transform 0.3s ease;
             animation: slideIn 0.5s ease-in-out;
         }
-        
+
         button:hover {
-            background: #FDD835;
-            /* لون أصفر داكن */
+            background: #FDD835; /* لون أصفر داكن */
             transform: translateY(-2px);
         }
-        
+
         button:disabled {
             background: #ccc;
             cursor: not-allowed;
         }
-        
+
         .result {
             margin-top: 20px;
             font-size: 18px;
             color: #fff;
             animation: fadeIn 0.5s ease-in-out;
         }
-        
+
         .result p {
             margin: 10px 0;
             padding: 10px;
@@ -122,11 +114,10 @@
             border-radius: 10px;
             animation: slideIn 0.5s ease-in-out;
         }
+
         /* نص التطوير */
-        
         .developer {
-            position: fixed;
-            /* تثبيت النص في الأسفل */
+            position: fixed; /* تثبيت النص في الأسفل */
             bottom: 10px;
             left: 50%;
             transform: translateX(-50%);
@@ -136,13 +127,12 @@
             text-align: center;
             width: 100%;
         }
+
         /* إشعار Toast */
-        
         .toast {
             visibility: hidden;
             min-width: 250px;
-            background-color: #ff6f61;
-            /* لون أحمر */
+            background-color: #ff6f61; /* لون أحمر */
             color: #fff;
             text-align: center;
             border-radius: 10px;
@@ -156,13 +146,13 @@
             opacity: 0;
             transition: opacity 0.5s, visibility 0.5s;
         }
-        
+
         .toast.show {
             visibility: visible;
             opacity: 1;
         }
+
         /* تأثيرات الحركة */
-        
         @keyframes fadeIn {
             from {
                 opacity: 0;
@@ -173,7 +163,7 @@
                 transform: translateY(0);
             }
         }
-        
+
         @keyframes slideIn {
             from {
                 opacity: 0;
@@ -184,7 +174,7 @@
                 transform: translateX(0);
             }
         }
-        
+
         @keyframes pulse {
             0% {
                 transform: scale(1);
@@ -196,30 +186,31 @@
                 transform: scale(1);
             }
         }
-        
+
         button:active {
             animation: pulse 0.3s ease;
         }
+
         /* التجاوب مع الشاشات الصغيرة */
-        
         @media (max-width: 600px) {
             h1 {
                 font-size: 24px;
             }
-            input,
-            button {
+
+            input, button {
                 font-size: 14px;
             }
+
             .container {
                 padding: 20px;
             }
+
             .developer {
                 font-size: 12px;
             }
         }
     </style>
 </head>
-
 <body>
     <div id="loginContainer" class="container">
         <div class="logo">
@@ -355,7 +346,27 @@
                 }
             }, 1000);
         }
+
+        // منع النقر بزر الماوس الأيمن
+        document.addEventListener('contextmenu', function (e) {
+            e.preventDefault();
+        });
+
+        // منع اختصارات لوحة المفاتيح
+        document.addEventListener('keydown', function (e) {
+            // منع F12
+            if (e.key === 'F12') {
+                e.preventDefault();
+            }
+            // منع Ctrl+Shift+I
+            if (e.ctrlKey && e.shiftKey && e.key === 'I') {
+                e.preventDefault();
+            }
+            // منع Ctrl+U
+            if (e.ctrlKey && e.key === 'U') {
+                e.preventDefault();
+            }
+        });
     </script>
 </body>
-
 </html>
