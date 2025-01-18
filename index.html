@@ -9,7 +9,7 @@
         /* التصميم العام */
         body {
             font-family: 'Poppins', sans-serif;
-            background: linear-gradient(135deg, #1e3c72, #2a5298); /* خلفية زرقاء داكنة */
+            background: linear-gradient(135deg, #1a1a1a, #333333); /* خلفية داكنة */
             color: #fff;
             display: flex;
             justify-content: center;
@@ -36,20 +36,10 @@
             z-index: 2;
         }
 
-        .logo {
-            text-align: center;
-            margin-bottom: 20px;
-        }
-
-        .logo img {
-            max-width: 100px; /* تصغير حجم الصورة */
-            height: auto;
-        }
-
         h1 {
             font-size: 28px;
             margin-bottom: 20px;
-            color: #FFEB3B; /* لون أصفر */
+            color: #FFD700; /* لون ذهبي */
             font-weight: 600;
             animation: slideIn 0.5s ease-in-out;
         }
@@ -80,10 +70,10 @@
             width: 100%;
             padding: 12px;
             margin-top: 20px;
-            background: #FFEB3B; /* لون أصفر */
+            background: #FFD700; /* لون ذهبي */
             border: none;
             border-radius: 10px;
-            color: #1e3c72; /* لون أزرق داكن */
+            color: #1a1a1a; /* لون داكن */
             font-size: 16px;
             cursor: pointer;
             transition: background 0.3s ease, transform 0.3s ease;
@@ -91,7 +81,7 @@
         }
 
         button:hover {
-            background: #FDD835; /* لون أصفر داكن */
+            background: #FFC300; /* لون ذهبي داكن */
             transform: translateY(-2px);
         }
 
@@ -209,13 +199,43 @@
                 font-size: 12px;
             }
         }
+
+        /* قطرات نفط متحركة */
+        .oil-drop {
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            background: #FFD700; /* لون ذهبي */
+            border-radius: 50%;
+            animation: float 5s infinite ease-in-out;
+            z-index: 1;
+        }
+
+        @keyframes float {
+            0% {
+                transform: translateY(0) translateX(0) scale(1);
+                opacity: 0.8;
+            }
+            50% {
+                transform: translateY(-100px) translateX(50px) scale(0.8);
+                opacity: 0.5;
+            }
+            100% {
+                transform: translateY(0) translateX(0) scale(1);
+                opacity: 0.8;
+            }
+        }
     </style>
 </head>
 <body>
+    <!-- قطرات نفط متحركة -->
+    <div class="oil-drop" style="top: 10%; left: 20%; animation-delay: 0s;"></div>
+    <div class="oil-drop" style="top: 20%; left: 80%; animation-delay: 1s;"></div>
+    <div class="oil-drop" style="top: 50%; left: 50%; animation-delay: 2s;"></div>
+    <div class="oil-drop" style="top: 70%; left: 10%; animation-delay: 3s;"></div>
+    <div class="oil-drop" style="top: 90%; left: 70%; animation-delay: 4s;"></div>
+
     <div id="loginContainer" class="container">
-        <div class="logo">
-            <img src="https://www2.0zz0.com/2025/01/18/16/478005539.png" alt="شعار SOMO">
-        </div>
         <h1>الرجاء إدخال رمز الدخول</h1>
         <form id="loginForm">
             <input type="password" id="password" placeholder="رمز الدخول" required>
@@ -227,9 +247,6 @@
     </div>
 
     <div id="calculatorContainer" class="container" style="display: none;">
-        <div class="logo">
-            <img src="https://www2.0zz0.com/2025/01/18/16/478005539.png" alt="شعار SOMO">
-        </div>
         <h1>حاسبة النطاق المسموح</h1>
         <form id="rangeForm">
             <input type="text" id="baseQuantity" placeholder="الكمية الأساسية" required oninput="formatInput(this)">
