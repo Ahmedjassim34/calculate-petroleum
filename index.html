@@ -5,6 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>حاسبة النطاق المسموح</title>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+    <!-- رابط manifest.json -->
+    <link rel="manifest" href="/manifest.json">
     <style>
         /* التصميم العام */
         body {
@@ -70,7 +72,7 @@
             width: 100%;
             padding: 12px;
             margin-top: 20px;
-            background: #000000; /* لون أسود */
+            background: #ff6f61; /* لون أحمر مرجاني */
             border: none;
             border-radius: 10px;
             color: #fff; /* لون أبيض */
@@ -81,7 +83,7 @@
         }
 
         button:hover {
-            background: #333333; /* لون رمادي داكن */
+            background: #ff4a3d; /* لون أحمر داكن */
             transform: translateY(-2px);
         }
 
@@ -122,7 +124,7 @@
         .toast {
             visibility: hidden;
             min-width: 250px;
-            background-color: #ff6f61; /* لون أحمر */
+            background-color: #ff6f61; /* لون أحمر مرجاني */
             color: #fff;
             text-align: center;
             border-radius: 10px;
@@ -209,6 +211,7 @@
             border-radius: 50%;
             animation: float 5s infinite ease-in-out;
             z-index: 1;
+            box-shadow: 0 0 10px rgba(255, 255, 255, 0.5); /* إضافة ظل لجعلها تبرز */
         }
 
         @keyframes float {
@@ -265,7 +268,18 @@
     <!-- إشعار Toast -->
     <div id="toast" class="toast">رمز الدخول غير صحيح!</div>
 
+    <!-- تسجيل Service Worker -->
     <script>
+        if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.register('/service-worker.js')
+                .then((registration) => {
+                    console.log('Service Worker registered with scope:', registration.scope);
+                })
+                .catch((error) => {
+                    console.error('Service Worker registration failed:', error);
+                });
+        }
+
         let failedAttempts = 0;
         let isLocked = false;
         let countdownInterval;
