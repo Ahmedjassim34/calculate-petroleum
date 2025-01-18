@@ -270,6 +270,15 @@
         let isLocked = false;
         let countdownInterval;
 
+        // تحقق من التخزين المحلي عند تحميل الصفحة
+        window.onload = function () {
+            const endTime = localStorage.getItem('lockEndTime');
+            if (endTime && Date.now() < endTime) {
+                const remainingTime = Math.ceil((endTime - Date.now()) / 1000);
+                startCountdown(remainingTime);
+            }
+        };
+
         // دالة للتحقق من رمز الدخول
         function checkPassword() {
             if (isLocked) {
@@ -288,6 +297,8 @@
                     isLocked = true;
                     document.getElementById('loginButton').disabled = true;
                     document.getElementById('timerMessage').style.display = 'block';
+                    const endTime = Date.now() + 30000; // 30 ثانية من الآن
+                    localStorage.setItem('lockEndTime', endTime);
                     startCountdown(30);
                     showToast("تم تعطيل الإدخال لمدة 30 ثانية");
                 } else {
@@ -359,6 +370,7 @@
                     isLocked = false;
                     document.getElementById('loginButton').disabled = false;
                     document.getElementById('timerMessage').style.display = 'none';
+                    localStorage.removeItem('lockEndTime');
                     showToast("يمكنك الآن إعادة المحاولة");
                 }
             }, 1000);
