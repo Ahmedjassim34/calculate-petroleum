@@ -268,6 +268,11 @@
     <!-- إشعار Toast -->
     <div id="toast" class="toast">رمز الدخول غير صحيح!</div>
 
+    <!-- زر التثبيت -->
+    <div id="installButton" style="display: none; position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); background-color: #ff6f61; color: white; padding: 10px 20px; border-radius: 25px; cursor: pointer; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2); z-index: 1000;">
+        📲 تثبيت التطبيق للعمل بدون إنترنت
+    </div>
+
     <!-- تسجيل Service Worker -->
     <script>
         if ('serviceWorker' in navigator) {
@@ -279,6 +284,37 @@
                     console.error('Service Worker registration failed:', error);
                 });
         }
+
+        let deferredPrompt;
+
+        // حدث قبل التثبيت
+        window.addEventListener('beforeinstallprompt', (e) => {
+            e.preventDefault(); // منع العرض التلقائي للنافذة
+            deferredPrompt = e; // حفظ الحدث لاستخدامه لاحقًا
+            document.getElementById('installButton').style.display = 'block'; // عرض زر التثبيت
+        });
+
+        // حدث النقر على زر التثبيت
+        document.getElementById('installButton').addEventListener('click', () => {
+            if (deferredPrompt) {
+                deferredPrompt.prompt(); // عرض نافذة التثبيت
+                deferredPrompt.userChoice.then((choiceResult) => {
+                    if (choiceResult.outcome === 'accepted') {
+                        console.log('تم قبول التثبيت');
+                    } else {
+                        console.log('تم رفض التثبيت');
+                    }
+                    deferredPrompt = null; // إعادة تعيين المتغير
+                    document.getElementById('installButton').style.display = 'none'; // إخفاء الزر بعد التثبيت
+                });
+            }
+        });
+
+        // حدث بعد التثبيت
+        window.addEventListener('appinstalled', () => {
+            console.log('تم تثبيت التطبيق بنجاح');
+            document.getElementById('installButton').style.display = 'none'; // إخفاء الزر بعد التثبيت
+        });
 
         let failedAttempts = 0;
         let isLocked = false;
