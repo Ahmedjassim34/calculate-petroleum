@@ -1,0 +1,361 @@
+<!DOCTYPE html>
+<html lang="ar">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>حاسبة النطاق المسموح</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+    <style>
+        /* التصميم العام */
+        
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, #1e3c72, #2a5298);
+            /* خلفية زرقاء داكنة */
+            color: #fff;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            direction: rtl;
+            overflow: hidden;
+            position: relative;
+        }
+        
+        .container {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 30px;
+            border-radius: 20px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            max-width: 400px;
+            width: 90%;
+            text-align: center;
+            animation: fadeIn 0.5s ease-in-out;
+            position: relative;
+            z-index: 2;
+        }
+        
+        .logo {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        
+        .logo img {
+            max-width: 100px;
+            /* تصغير حجم الصورة */
+            height: auto;
+        }
+        
+        h1 {
+            font-size: 28px;
+            margin-bottom: 20px;
+            color: #FFEB3B;
+            /* لون أصفر */
+            font-weight: 600;
+            animation: slideIn 0.5s ease-in-out;
+        }
+        
+        input {
+            width: 100%;
+            padding: 12px;
+            margin: 10px 0;
+            border: none;
+            border-radius: 10px;
+            background: rgba(255, 255, 255, 0.2);
+            color: #fff;
+            font-size: 16px;
+            outline: none;
+            transition: background 0.3s ease, transform 0.3s ease;
+        }
+        
+        input::placeholder {
+            color: rgba(255, 255, 255, 0.7);
+        }
+        
+        input:focus {
+            background: rgba(255, 255, 255, 0.3);
+            transform: scale(1.02);
+        }
+        
+        button {
+            width: 100%;
+            padding: 12px;
+            margin-top: 20px;
+            background: #FFEB3B;
+            /* لون أصفر */
+            border: none;
+            border-radius: 10px;
+            color: #1e3c72;
+            /* لون أزرق داكن */
+            font-size: 16px;
+            cursor: pointer;
+            transition: background 0.3s ease, transform 0.3s ease;
+            animation: slideIn 0.5s ease-in-out;
+        }
+        
+        button:hover {
+            background: #FDD835;
+            /* لون أصفر داكن */
+            transform: translateY(-2px);
+        }
+        
+        button:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+        }
+        
+        .result {
+            margin-top: 20px;
+            font-size: 18px;
+            color: #fff;
+            animation: fadeIn 0.5s ease-in-out;
+        }
+        
+        .result p {
+            margin: 10px 0;
+            padding: 10px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            animation: slideIn 0.5s ease-in-out;
+        }
+        /* نص التطوير */
+        
+        .developer {
+            position: fixed;
+            /* تثبيت النص في الأسفل */
+            bottom: 10px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 14px;
+            color: rgba(255, 255, 255, 0.8);
+            z-index: 2;
+            text-align: center;
+            width: 100%;
+        }
+        /* إشعار Toast */
+        
+        .toast {
+            visibility: hidden;
+            min-width: 250px;
+            background-color: #ff6f61;
+            /* لون أحمر */
+            color: #fff;
+            text-align: center;
+            border-radius: 10px;
+            padding: 16px;
+            position: fixed;
+            z-index: 1000;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 14px;
+            opacity: 0;
+            transition: opacity 0.5s, visibility 0.5s;
+        }
+        
+        .toast.show {
+            visibility: visible;
+            opacity: 1;
+        }
+        /* تأثيرات الحركة */
+        
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateX(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+        
+        @keyframes pulse {
+            0% {
+                transform: scale(1);
+            }
+            50% {
+                transform: scale(1.05);
+            }
+            100% {
+                transform: scale(1);
+            }
+        }
+        
+        button:active {
+            animation: pulse 0.3s ease;
+        }
+        /* التجاوب مع الشاشات الصغيرة */
+        
+        @media (max-width: 600px) {
+            h1 {
+                font-size: 24px;
+            }
+            input,
+            button {
+                font-size: 14px;
+            }
+            .container {
+                padding: 20px;
+            }
+            .developer {
+                font-size: 12px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div id="loginContainer" class="container">
+        <div class="logo">
+            <img src="https://www2.0zz0.com/2025/01/18/16/478005539.png" alt="شعار SOMO">
+        </div>
+        <h1>الرجاء إدخال رمز الدخول</h1>
+        <form id="loginForm">
+            <input type="password" id="password" placeholder="رمز الدخول" required>
+            <button type="button" id="loginButton" onclick="checkPassword()">دخول</button>
+        </form>
+        <div id="timerMessage" style="display: none; margin-top: 20px;">
+            <p>تم تعطيل الإدخال لمدة <span id="countdown">30</span> ثانية</p>
+        </div>
+    </div>
+
+    <div id="calculatorContainer" class="container" style="display: none;">
+        <div class="logo">
+            <img src="https://www2.0zz0.com/2025/01/18/16/478005539.png" alt="شعار SOMO">
+        </div>
+        <h1>حاسبة النطاق المسموح</h1>
+        <form id="rangeForm">
+            <input type="text" id="baseQuantity" placeholder="الكمية الأساسية" required oninput="formatInput(this)">
+            <input type="text" id="percentage" placeholder="النسبة المئوية (±%)" required oninput="formatInput(this)">
+            <button type="button" onclick="calculateRange()">احسب</button>
+        </form>
+        <div class="result">
+            <p id="minResult"></p>
+            <p id="maxResult"></p>
+        </div>
+    </div>
+
+    <!-- نص التطوير -->
+    <div class="developer">Developed by Ahmed Jasim</div>
+
+    <!-- إشعار Toast -->
+    <div id="toast" class="toast">رمز الدخول غير صحيح!</div>
+
+    <script>
+        let failedAttempts = 0;
+        let isLocked = false;
+        let countdownInterval;
+
+        // دالة للتحقق من رمز الدخول
+        function checkPassword() {
+            if (isLocked) {
+                showToast("تم تعطيل الإدخال مؤقتًا. الرجاء الانتظار.");
+                return;
+            }
+
+            const password = document.getElementById('password').value;
+            if (password === '0101') {
+                document.getElementById('loginContainer').style.display = 'none';
+                document.getElementById('calculatorContainer').style.display = 'block';
+                failedAttempts = 0; // إعادة تعيين عدد المحاولات الفاشلة
+            } else {
+                failedAttempts++;
+                if (failedAttempts >= 2) {
+                    isLocked = true;
+                    document.getElementById('loginButton').disabled = true;
+                    document.getElementById('timerMessage').style.display = 'block';
+                    startCountdown(30);
+                    showToast("تم تعطيل الإدخال لمدة 30 ثانية");
+                } else {
+                    showToast("رمز الدخول غير صحيح!");
+                }
+            }
+        }
+
+        // دالة لعرض إشعار Toast
+        function showToast(message) {
+            const toast = document.getElementById('toast');
+            toast.innerText = message;
+            toast.classList.add('show');
+            setTimeout(() => {
+                toast.classList.remove('show');
+            }, 3000); // الإشعار يختفي بعد 3 ثوانٍ
+        }
+
+        // دالة لتنسيق الأرقام بفواصل أثناء الكتابة
+        function formatInput(input) {
+            // إزالة الفواصل الموجودة مسبقًا
+            let value = input.value.replace(/,/g, '');
+
+            // تنسيق الرقم بفواصل
+            input.value = new Intl.NumberFormat().format(value);
+        }
+
+        // دالة لتنسيق الأرقام بفواصل للنتائج
+        function formatNumber(number) {
+            return new Intl.NumberFormat().format(number);
+        }
+
+        // دالة لحساب النطاق المسموح
+        function calculateRange() {
+            // الحصول على القيم المدخلة وإزالة الفواصل
+            const baseQuantity = parseFloat(document.getElementById('baseQuantity').value.replace(/,/g, ''));
+            const percentage = parseFloat(document.getElementById('percentage').value.replace(/,/g, ''));
+
+            // التحقق من أن القيم مدخلة بشكل صحيح
+            if (isNaN(baseQuantity) || isNaN(percentage)) {
+                showToast("الرجاء إدخال قيم صحيحة");
+                return;
+            }
+
+            // حساب الحد الأدنى والحد الأقصى
+            const minQuantity = baseQuantity - (baseQuantity * (percentage / 100));
+            const maxQuantity = baseQuantity + (baseQuantity * (percentage / 100));
+
+            // تنسيق الأرقام بفواصل
+            const formattedMin = formatNumber(minQuantity.toFixed(2));
+            const formattedMax = formatNumber(maxQuantity.toFixed(2));
+
+            // عرض النتائج
+            document.getElementById('minResult').innerText = `الحد الأدنى: ${formattedMin}`;
+            document.getElementById('maxResult').innerText = `الحد الأقصى: ${formattedMax}`;
+        }
+
+        // دالة لبدء العد التنازلي
+        function startCountdown(seconds) {
+            let remainingTime = seconds;
+            document.getElementById('countdown').innerText = remainingTime;
+
+            countdownInterval = setInterval(() => {
+                remainingTime--;
+                document.getElementById('countdown').innerText = remainingTime;
+
+                if (remainingTime <= 0) {
+                    clearInterval(countdownInterval);
+                    isLocked = false;
+                    document.getElementById('loginButton').disabled = false;
+                    document.getElementById('timerMessage').style.display = 'none';
+                    showToast("يمكنك الآن إعادة المحاولة");
+                }
+            }, 1000);
+        }
+    </script>
+</body>
+
+</html>
