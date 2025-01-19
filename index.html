@@ -72,8 +72,8 @@
     <div class="container animate__animated animate__fadeIn">
         <h1>نظام تسجيل حضور الموظفين</h1>
 
-        <label for="employeeName" class="form-label">اسم الموظف:</label>
-        <input type="text" id="employeeName" class="form-control" placeholder="ادخل اسم الموظف">
+        <label for="employeeNumber" class="form-label">رقم الموظف:</label>
+        <input type="number" id="employeeNumber" class="form-control" placeholder="ادخل رقم الموظف">
 
         <button onclick="registerAttendance()" class="btn btn-primary">تسجيل الحضور</button>
 
@@ -84,22 +84,45 @@
     <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
     <script>
         // تهيئة EmailJS باستخدام Public Key
-        emailjs.init("qEeuN6SdjO86fTcaF"); // استبدل بـ Public Key الخاص بك
+        emailjs.init("YOUR_PUBLIC_KEY"); // استبدل بـ Public Key الخاص بك
 
-        // موقع الضيفة (الإحداثيات التي قدمتها)
-        const workLocation = {
-            latitude: 29.62719, // خط عرض موقع الضيفة
-            longitude: 48.76548 // خط طول موقع الضيفة
+        // قائمة الموظفين (يمكن استبدالها بقاعدة بيانات)
+        const employees = {
+            1: "أحمد جاسم محمد",
+            2: "محمد علي حسن",
+            3: "فاطمة خالد سعيد",
+            4: "علي جاسم محمد",
+            5:"مرتضى فؤاد خضير"
         };
 
-        // الحد الأقصى للمسافة المسموح بها (20 كم)
-        const maxDistance = 20; // بالكيلومترات
-
+        // دالة لتسجيل الحضور
         function registerAttendance() {
-            const employeeName = document.getElementById('employeeName').value;
-            if (employeeName.trim() === "") {
-                alert("الرجاء إدخال اسم الموظف");
+            const employeeNumber = document.getElementById('employeeNumber').value;
+            if (!employeeNumber) {
+                alert("الرجاء إدخال رقم الموظف");
                 return;
+            }
+
+            // التحقق من أن الموظف مسجل
+            const employeeName = employees[employeeNumber];
+            if (!employeeName) {
+                alert("رقم الموظف غير صحيح");
+                return;
+            }
+
+            // الحصول على معرف الجهاز (userAgent)
+            const deviceId = navigator.userAgent;
+
+            // التحقق من أن الموظف لم يسجل من قبل
+            const storedDeviceId = localStorage.getItem(`employee_${employeeNumber}_device`);
+            if (storedDeviceId) {
+                if (storedDeviceId !== deviceId) {
+                    alert("لا يمكن تسجيل الحضور إلا من الجهاز الذي سجلت منه لأول مرة.");
+                    return;
+                }
+            } else {
+                // حفظ معرف الجهاز لأول مرة
+                localStorage.setItem(`employee_${employeeNumber}_device`, deviceId);
             }
 
             // تحديد الموقع الجغرافي
@@ -111,9 +134,6 @@
                             longitude: position.coords.longitude
                         };
 
-                        // حساب المسافة بين موقع الموظف وموقع الضيفة
-                        const distance = calculateDistance(workLocation, employeeLocation);
-
                         // عرض رسالة "تم التسجيل بنجاح" للموظف
                         const messageElement = document.getElementById('message');
                         messageElement.textContent = "تم تسجيل الحضور بنجاح.";
@@ -121,11 +141,10 @@
                         messageElement.classList.add('animate__bounceIn');
 
                         // إرسال بريد إلكتروني إلى المسؤول
-                        if (distance <= maxDistance) {
-                            sendEmailToAdmin(employeeName, employeeLocation, "موجود");
-                        } else {
-                            sendEmailToAdmin(employeeName, employeeLocation, "غير موجود");
-                        }
+                        sendEmailToAdmin(employeeName, employeeLocation);
+
+                        // حفظ حالة التسجيل في localStorage
+                        localStorage.setItem(`employee_${employeeNumber}_registered`, true);
                     },
                     (error) => {
                         alert("تعذر تحديد الموقع. الرجاء المحاولة مرة أخرى.");
@@ -138,34 +157,16 @@
             }
         }
 
-        // دالة لحساب المسافة بين موقعين باستخدام خوارزمية Haversine
-        function calculateDistance(loc1, loc2) {
-            const toRadians = (degree) => degree * (Math.PI / 180);
-            const R = 6371; // نصف قطر الأرض بالكيلومترات
-
-            const dLat = toRadians(loc2.latitude - loc1.latitude);
-            const dLon = toRadians(loc2.longitude - loc1.longitude);
-
-            const a =
-                Math.sin(dLat / 2) * Math.sin(dLat / 2) +
-                Math.cos(toRadians(loc1.latitude)) * Math.cos(toRadians(loc2.latitude)) *
-                Math.sin(dLon / 2) * Math.sin(dLon / 2);
-
-            const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-            return R * c; // المسافة بالكيلومترات
-        }
-
         // دالة لإرسال بريد إلكتروني إلى المسؤول
-        function sendEmailToAdmin(employeeName, employeeLocation, status) {
+        function sendEmailToAdmin(employeeName, employeeLocation) {
             const templateParams = {
                 to_name: "المسؤول",
                 employee_name: employeeName,
                 latitude: employeeLocation.latitude,
-                longitude: employeeLocation.longitude,
-                status: status
+                longitude: employeeLocation.longitude
             };
 
-            emailjs.send("service_70gjot4", "template_gpp22j5", templateParams)
+            emailjs.send("YOUR_SERVICE_ID", "YOUR_TEMPLATE_ID", templateParams)
                 .then((response) => {
                     console.log("تم إرسال البريد الإلكتروني بنجاح!", response.status, response.text);
                 }, (error) => {
