@@ -1,454 +1,179 @@
 <!DOCTYPE html>
 <html lang="ar">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>حاسبة النطاق المسموح</title>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
-    <!-- رابط manifest.json -->
-    <link rel="manifest" href="/manifest.json">
+    <title>نظام تسجيل حضور الموظفين</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Animate.css -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
     <style>
-        /* التصميم العام */
         body {
-            font-family: 'Poppins', sans-serif;
-            background: linear-gradient(135deg, #0a0a0a, #1a1a1a); /* خلفية داكنة */
+            background: linear-gradient(135deg, #6a11cb, #2575fc);
             color: #fff;
+            font-family: 'Arial', sans-serif;
             display: flex;
             justify-content: center;
             align-items: center;
             height: 100vh;
             margin: 0;
-            direction: rtl;
-            overflow: hidden;
-            position: relative;
         }
-
+        
         .container {
             background: rgba(255, 255, 255, 0.1);
             padding: 30px;
-            border-radius: 20px;
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+            border-radius: 15px;
             backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            max-width: 400px;
-            width: 90%;
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
             text-align: center;
-            animation: fadeIn 0.5s ease-in-out;
-            position: relative;
-            z-index: 2;
-        }
-
-        h1 {
-            font-size: 28px;
-            margin-bottom: 20px;
-            color: #ffffff; /* لون أبيض */
-            font-weight: 600;
-            animation: slideIn 0.5s ease-in-out;
-        }
-
-        input {
+            max-width: 500px;
             width: 100%;
-            padding: 12px;
-            margin: 10px 0;
-            border: none;
-            border-radius: 10px;
-            background: rgba(255, 255, 255, 0.2);
-            color: #fff;
-            font-size: 16px;
-            outline: none;
-            transition: background 0.3s ease, transform 0.3s ease;
         }
-
-        input::placeholder {
-            color: rgba(255, 255, 255, 0.7);
+        
+        h1 {
+            font-size: 2.5rem;
+            margin-bottom: 20px;
+            font-weight: bold;
         }
-
-        input:focus {
-            background: rgba(255, 255, 255, 0.3);
-            transform: scale(1.02);
-        }
-
+        
+        input,
         button {
             width: 100%;
-            padding: 12px;
-            margin-top: 20px;
-            background: #ff6f61; /* لون أحمر مرجاني */
-            border: none;
-            border-radius: 10px;
-            color: #fff; /* لون أبيض */
-            font-size: 16px;
-            cursor: pointer;
-            transition: background 0.3s ease, transform 0.3s ease;
-            animation: slideIn 0.5s ease-in-out;
-        }
-
-        button:hover {
-            background: #ff4a3d; /* لون أحمر داكن */
-            transform: translateY(-2px);
-        }
-
-        button:disabled {
-            background: #555555; /* لون رمادي */
-            cursor: not-allowed;
-        }
-
-        .result {
-            margin-top: 20px;
-            font-size: 18px;
-            color: #fff;
-            animation: fadeIn 0.5s ease-in-out;
-        }
-
-        .result p {
-            margin: 10px 0;
             padding: 10px;
-            background: rgba(255, 255, 255, 0.1);
-            border-radius: 10px;
-            animation: slideIn 0.5s ease-in-out;
+            margin: 10px 0;
+            border: none;
+            border-radius: 5px;
+            font-size: 1rem;
         }
-
-        /* نص التطوير */
-        .developer {
-            position: fixed; /* تثبيت النص في الأسفل */
-            bottom: 10px;
-            left: 50%;
-            transform: translateX(-50%);
-            font-size: 14px;
-            color: rgba(255, 255, 255, 0.8);
-            z-index: 2;
-            text-align: center;
-            width: 100%;
-        }
-
-        /* إشعار Toast */
-        .toast {
-            visibility: hidden;
-            min-width: 250px;
-            background-color: #ff6f61; /* لون أحمر مرجاني */
+        
+        button {
+            background: #2575fc;
             color: #fff;
-            text-align: center;
-            border-radius: 10px;
-            padding: 16px;
-            position: fixed;
-            z-index: 1000;
-            bottom: 30px;
-            left: 50%;
-            transform: translateX(-50%);
-            font-size: 14px;
-            opacity: 0;
-            transition: opacity 0.5s, visibility 0.5s;
+            cursor: pointer;
+            transition: background 0.3s ease;
         }
-
-        .toast.show {
-            visibility: visible;
-            opacity: 1;
+        
+        button:hover {
+            background: #1b5fd9;
         }
-
-        /* تأثيرات الحركة */
-        @keyframes fadeIn {
-            from {
-                opacity: 0;
-                transform: translateY(20px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        @keyframes slideIn {
-            from {
-                opacity: 0;
-                transform: translateX(-20px);
-            }
-            to {
-                opacity: 1;
-                transform: translateX(0);
-            }
-        }
-
-        @keyframes pulse {
-            0% {
-                transform: scale(1);
-            }
-            50% {
-                transform: scale(1.05);
-            }
-            100% {
-                transform: scale(1);
-            }
-        }
-
-        button:active {
-            animation: pulse 0.3s ease;
-        }
-
-        /* التجاوب مع الشاشات الصغيرة */
-        @media (max-width: 600px) {
-            h1 {
-                font-size: 24px;
-            }
-
-            input, button {
-                font-size: 14px;
-            }
-
-            .container {
-                padding: 20px;
-            }
-
-            .developer {
-                font-size: 12px;
-            }
-        }
-
-        /* قطرات نفط متحركة */
-        .oil-drop {
-            position: absolute;
-            width: 20px;
-            height: 20px;
-            background: #000000; /* لون أسود */
-            border-radius: 50%;
-            animation: float 5s infinite ease-in-out;
-            z-index: 1;
-            box-shadow: 0 0 10px rgba(255, 255, 255, 0.5); /* إضافة ظل لجعلها تبرز */
-        }
-
-        @keyframes float {
-            0% {
-                transform: translateY(0) translateX(0) scale(1);
-                opacity: 0.8;
-            }
-            50% {
-                transform: translateY(-100px) translateX(50px) scale(0.8);
-                opacity: 0.5;
-            }
-            100% {
-                transform: translateY(0) translateX(0) scale(1);
-                opacity: 0.8;
-            }
+        
+        .message {
+            margin-top: 20px;
+            font-size: 1.2rem;
+            font-weight: bold;
         }
     </style>
 </head>
+
 <body>
-    <!-- قطرات نفط متحركة -->
-    <div class="oil-drop" style="top: 10%; left: 20%; animation-delay: 0s;"></div>
-    <div class="oil-drop" style="top: 20%; left: 80%; animation-delay: 1s;"></div>
-    <div class="oil-drop" style="top: 50%; left: 50%; animation-delay: 2s;"></div>
-    <div class="oil-drop" style="top: 70%; left: 10%; animation-delay: 3s;"></div>
-    <div class="oil-drop" style="top: 90%; left: 70%; animation-delay: 4s;"></div>
 
-    <div id="loginContainer" class="container">
-        <h1>الرجاء إدخال رمز الدخول</h1>
-        <form id="loginForm">
-            <input type="password" id="password" placeholder="رمز الدخول" required>
-            <button type="button" id="loginButton" onclick="checkPassword()">دخول</button>
-        </form>
-        <div id="timerMessage" style="display: none; margin-top: 20px;">
-            <p>تم تعطيل الإدخال لمدة <span id="countdown">30</span> ثانية</p>
-        </div>
+    <div class="container animate__animated animate__fadeIn">
+        <h1>نظام تسجيل حضور الموظفين</h1>
+
+        <label for="employeeName" class="form-label">اسم الموظف:</label>
+        <input type="text" id="employeeName" class="form-control" placeholder="ادخل اسم الموظف">
+
+        <button onclick="registerAttendance()" class="btn btn-primary">تسجيل الحضور</button>
+
+        <div class="message" id="message"></div>
     </div>
 
-    <div id="calculatorContainer" class="container" style="display: none;">
-        <h1>حاسبة النطاق المسموح</h1>
-        <form id="rangeForm">
-            <input type="text" id="baseQuantity" placeholder="الكمية الأساسية" required oninput="formatInput(this)">
-            <input type="text" id="percentage" placeholder="النسبة المئوية (±%)" required oninput="formatInput(this)">
-            <button type="button" onclick="calculateRange()">احسب</button>
-        </form>
-        <div class="result">
-            <p id="minResult"></p>
-            <p id="maxResult"></p>
-        </div>
-    </div>
-
-    <!-- نص التطوير -->
-    <div class="developer">Developed by Ahmed Jasim</div>
-
-    <!-- إشعار Toast -->
-    <div id="toast" class="toast">رمز الدخول غير صحيح!</div>
-
-    <!-- زر التثبيت -->
-    <div id="installButton" style="display: none; position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); background-color: #ff6f61; color: white; padding: 10px 20px; border-radius: 25px; cursor: pointer; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2); z-index: 1000;">
-        📲 تثبيت التطبيق للعمل بدون إنترنت
-    </div>
-
-    <!-- تسجيل Service Worker -->
+    <!-- EmailJS SDK -->
+    <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
     <script>
-        if ('serviceWorker' in navigator) {
-            navigator.serviceWorker.register('/service-worker.js')
-                .then((registration) => {
-                    console.log('Service Worker registered with scope:', registration.scope);
-                })
-                .catch((error) => {
-                    console.error('Service Worker registration failed:', error);
-                });
-        }
+        // تهيئة EmailJS باستخدام Public Key
+        emailjs.init("qEeuN6SdjO86fTcaF"); // استبدل بـ Public Key الخاص بك
 
-        let deferredPrompt;
-
-        // حدث قبل التثبيت
-        window.addEventListener('beforeinstallprompt', (e) => {
-            e.preventDefault(); // منع العرض التلقائي للنافذة
-            deferredPrompt = e; // حفظ الحدث لاستخدامه لاحقًا
-            document.getElementById('installButton').style.display = 'block'; // عرض زر التثبيت
-        });
-
-        // حدث النقر على زر التثبيت
-        document.getElementById('installButton').addEventListener('click', () => {
-            if (deferredPrompt) {
-                deferredPrompt.prompt(); // عرض نافذة التثبيت
-                deferredPrompt.userChoice.then((choiceResult) => {
-                    if (choiceResult.outcome === 'accepted') {
-                        console.log('تم قبول التثبيت');
-                    } else {
-                        console.log('تم رفض التثبيت');
-                    }
-                    deferredPrompt = null; // إعادة تعيين المتغير
-                    document.getElementById('installButton').style.display = 'none'; // إخفاء الزر بعد التثبيت
-                });
-            }
-        });
-
-        // حدث بعد التثبيت
-        window.addEventListener('appinstalled', () => {
-            console.log('تم تثبيت التطبيق بنجاح');
-            document.getElementById('installButton').style.display = 'none'; // إخفاء الزر بعد التثبيت
-        });
-
-        let failedAttempts = 0;
-        let isLocked = false;
-        let countdownInterval;
-
-        // تحقق من التخزين المحلي عند تحميل الصفحة
-        window.onload = function () {
-            const endTime = localStorage.getItem('lockEndTime');
-            if (endTime && Date.now() < endTime) {
-                const remainingTime = Math.ceil((endTime - Date.now()) / 1000);
-                isLocked = true;
-                document.getElementById('loginButton').disabled = true;
-                document.getElementById('timerMessage').style.display = 'block';
-                startCountdown(remainingTime);
-            }
+        // موقع الضيفة (الإحداثيات التي قدمتها)
+        const workLocation = {
+            latitude: 29.62719, // خط عرض موقع الضيفة
+            longitude: 48.76548 // خط طول موقع الضيفة
         };
 
-        // دالة للتحقق من رمز الدخول
-        function checkPassword() {
-            if (isLocked) {
-                showToast("تم تعطيل الإدخال مؤقتًا. الرجاء الانتظار.");
+        // الحد الأقصى للمسافة المسموح بها (20 كم)
+        const maxDistance = 20; // بالكيلومترات
+
+        function registerAttendance() {
+            const employeeName = document.getElementById('employeeName').value;
+            if (employeeName.trim() === "") {
+                alert("الرجاء إدخال اسم الموظف");
                 return;
             }
 
-            const password = document.getElementById('password').value;
-            if (password === '0101') {
-                document.getElementById('loginContainer').style.display = 'none';
-                document.getElementById('calculatorContainer').style.display = 'block';
-                failedAttempts = 0; // إعادة تعيين عدد المحاولات الفاشلة
+            // تحديد الموقع الجغرافي
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(
+                    (position) => {
+                        const employeeLocation = {
+                            latitude: position.coords.latitude,
+                            longitude: position.coords.longitude
+                        };
+
+                        // حساب المسافة بين موقع الموظف وموقع الضيفة
+                        const distance = calculateDistance(workLocation, employeeLocation);
+
+                        // عرض رسالة "تم التسجيل بنجاح" للموظف
+                        const messageElement = document.getElementById('message');
+                        messageElement.textContent = "تم تسجيل الحضور بنجاح.";
+                        messageElement.classList.remove('animate__shakeX');
+                        messageElement.classList.add('animate__bounceIn');
+
+                        // إرسال بريد إلكتروني إلى المسؤول
+                        if (distance <= maxDistance) {
+                            sendEmailToAdmin(employeeName, employeeLocation, "موجود");
+                        } else {
+                            sendEmailToAdmin(employeeName, employeeLocation, "غير موجود");
+                        }
+                    },
+                    (error) => {
+                        alert("تعذر تحديد الموقع. الرجاء المحاولة مرة أخرى.");
+                        document.getElementById('message').textContent = "تعذر تحديد الموقع.";
+                    }
+                );
             } else {
-                failedAttempts++;
-                if (failedAttempts >= 2) {
-                    isLocked = true;
-                    document.getElementById('loginButton').disabled = true;
-                    document.getElementById('timerMessage').style.display = 'block';
-                    const endTime = Date.now() + 30000; // 30 ثانية من الآن
-                    localStorage.setItem('lockEndTime', endTime);
-                    startCountdown(30);
-                    showToast("تم تعطيل الإدخال لمدة 30 ثانية");
-                } else {
-                    showToast("رمز الدخول غير صحيح!");
-                }
+                alert("المتصفح لا يدعم تحديد الموقع الجغرافي.");
+                document.getElementById('message').textContent = "المتصفح لا يدعم تحديد الموقع.";
             }
         }
 
-        // دالة لعرض إشعار Toast
-        function showToast(message) {
-            const toast = document.getElementById('toast');
-            toast.innerText = message;
-            toast.classList.add('show');
-            setTimeout(() => {
-                toast.classList.remove('show');
-            }, 3000); // الإشعار يختفي بعد 3 ثوانٍ
+        // دالة لحساب المسافة بين موقعين باستخدام خوارزمية Haversine
+        function calculateDistance(loc1, loc2) {
+            const toRadians = (degree) => degree * (Math.PI / 180);
+            const R = 6371; // نصف قطر الأرض بالكيلومترات
+
+            const dLat = toRadians(loc2.latitude - loc1.latitude);
+            const dLon = toRadians(loc2.longitude - loc1.longitude);
+
+            const a =
+                Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+                Math.cos(toRadians(loc1.latitude)) * Math.cos(toRadians(loc2.latitude)) *
+                Math.sin(dLon / 2) * Math.sin(dLon / 2);
+
+            const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+            return R * c; // المسافة بالكيلومترات
         }
 
-        // دالة لتنسيق الأرقام بفواصل أثناء الكتابة
-        function formatInput(input) {
-            // إزالة الفواصل الموجودة مسبقًا
-            let value = input.value.replace(/,/g, '');
+        // دالة لإرسال بريد إلكتروني إلى المسؤول
+        function sendEmailToAdmin(employeeName, employeeLocation, status) {
+            const templateParams = {
+                to_name: "المسؤول",
+                employee_name: employeeName,
+                latitude: employeeLocation.latitude,
+                longitude: employeeLocation.longitude,
+                status: status
+            };
 
-            // تنسيق الرقم بفواصل
-            input.value = new Intl.NumberFormat().format(value);
+            emailjs.send("service_70gjot4", "template_gpp22j5", templateParams)
+                .then((response) => {
+                    console.log("تم إرسال البريد الإلكتروني بنجاح!", response.status, response.text);
+                }, (error) => {
+                    console.error("فشل إرسال البريد الإلكتروني:", error);
+                });
         }
-
-        // دالة لتنسيق الأرقام بفواصل للنتائج
-        function formatNumber(number) {
-            return new Intl.NumberFormat().format(number);
-        }
-
-        // دالة لحساب النطاق المسموح
-        function calculateRange() {
-            // الحصول على القيم المدخلة وإزالة الفواصل
-            const baseQuantity = parseFloat(document.getElementById('baseQuantity').value.replace(/,/g, ''));
-            const percentage = parseFloat(document.getElementById('percentage').value.replace(/,/g, ''));
-
-            // التحقق من أن القيم مدخلة بشكل صحيح
-            if (isNaN(baseQuantity) || isNaN(percentage)) {
-                showToast("الرجاء إدخال قيم صحيحة");
-                return;
-            }
-
-            // حساب الحد الأدنى والحد الأقصى
-            const minQuantity = baseQuantity - (baseQuantity * (percentage / 100));
-            const maxQuantity = baseQuantity + (baseQuantity * (percentage / 100));
-
-            // تنسيق الأرقام بفواصل
-            const formattedMin = formatNumber(minQuantity.toFixed(2));
-            const formattedMax = formatNumber(maxQuantity.toFixed(2));
-
-            // عرض النتائج
-            document.getElementById('minResult').innerText = `الحد الأدنى: ${formattedMin}`;
-            document.getElementById('maxResult').innerText = `الحد الأقصى: ${formattedMax}`;
-        }
-
-        // دالة لبدء العد التنازلي
-        function startCountdown(seconds) {
-            let remainingTime = seconds;
-            document.getElementById('countdown').innerText = remainingTime;
-
-            countdownInterval = setInterval(() => {
-                remainingTime--;
-                document.getElementById('countdown').innerText = remainingTime;
-
-                if (remainingTime <= 0) {
-                    clearInterval(countdownInterval);
-                    isLocked = false;
-                    document.getElementById('loginButton').disabled = false;
-                    document.getElementById('timerMessage').style.display = 'none';
-                    localStorage.removeItem('lockEndTime');
-                    showToast("يمكنك الآن إعادة المحاولة");
-                }
-            }, 1000);
-        }
-
-        // منع النقر بزر الماوس الأيمن
-        document.addEventListener('contextmenu', function (e) {
-            e.preventDefault();
-        });
-
-        // منع اختصارات لوحة المفاتيح
-        document.addEventListener('keydown', function (e) {
-            // منع F12
-            if (e.key === 'F12') {
-                e.preventDefault();
-            }
-            // منع Ctrl+Shift+I
-            if (e.ctrlKey && e.shiftKey && e.key === 'I') {
-                e.preventDefault();
-            }
-            // منع Ctrl+U
-            if (e.ctrlKey && e.key === 'U') {
-                e.preventDefault();
-            }
-        });
     </script>
+
 </body>
+
 </html>
